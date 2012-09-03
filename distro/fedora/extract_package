@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# usage: extract_package $package $dest
+
+# create the output directory
+mkdir -p "$2"
+temp_file="$(mktemp -u)"
+temp_file2="$(mktemp -u)"
+
+rpm2cpio "$1" > "$temp_file"
+[ 0 -ne $? ] && exit 1
+
+if gzip -t "$temp_file" &> /dev/null; then
+	zcat "$temp_file" > "$temp_file2"
+elif bzip2 -t "$temp_file" &> /dev/null; then
+	bzcat "$temp_file" > "$temp_file2"
+elif lzma -t "$temp_file" &> /dev/null; then
+	lzcat "$temp_file" > "$temp_file2"
+elif xz -t "$temp_file" &> /dev/null; then
+	xzcat "$temp_file" > "$temp_file2"
+# TODO: xar for RPM5
+fi
+
+[ -f "$temp_file2" ] && mv "$temp_file2" "$temp_file"
+
+(cd "$2" && cpio -id < "$temp_file") &> /dev/null
+[ 0 -ne $? ] && exit 1
+
+rm "$temp_file"
+
+exit 0

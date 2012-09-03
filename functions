@@ -24,7 +24,7 @@ download_file()
 download_file_parallel()
 {
 	# if aria2 is not installed, download from a single mirror using wget
-	if [ -z "$(which aria2c)" ]
+	if [ -z "$(which aria2c &> /dev/null)" ]
 	then
 		echo "Warning: aria2 is not installed; using a single mirror."
 		download_file "$(echo $1 | cut -f 1 -d \ )" "$2"

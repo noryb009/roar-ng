@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# usage: convert_package_list $package_list $repository_name
+
+. ./distro/fedora/parameters
+
+temp_file="$(mktemp -u)"
+temp_file2="$(mktemp -u)"
+awk -f distro/fedora/xmlparser.awk "$1" > "$temp_file"
+
+case $2 in
+	fedora-updates)
+		path="linux/updates/$VERSION/$arch"
+		;;
+	fedora-fedora)
+		path="linux/releases/$VERSION/Fedora/$arch/os"
+		;;
+	fedora-everything)
+		path="linux/releases/$VERSION/Everything/$arch/os"
+		;;
+esac
+
+awk -v pkgpathStarter="$path" '
+	function trimB(s) {sub(/^ */,"",s); return s} # trim beginning of string
+	function clearVars() {
+		pkgname=""; pkgver=""; pkgrel=""; filename=""; pkgdesc=""
+	}
+	function printPkg() {
+		if(pkgname != "") {
+			printf("%s|%s|%s|%s/%s|%s\n", pkgname, pkgver, pkgrel, pkgpathStarter, filename, pkgdesc)
+		}
+		clearVars()
+	}
+	function getData(firstWord, endPhrase) {
+		getline
+		while($0 != endPhrase){
+			if($1==firstWord){
+				$1=""
+				return trimB($0)
+			}
+			if(endPhrase="") {
+				return ""
+			}
+			getline
+		}
+	}
+{
+	if($0 == "begin PACKAGE"){clearVars()}
+	if($0 == "end PACKAGE"){printPkg()}
+	if($0 == "begin NAME"){pkgname=getData("data", "end NAME")}
+	if($0 == "attrib ver"){pkgver=getData("value", "")}
+	if($0 == "attrib rel"){pkgrel=getData("value", "")}
+	if($0 == "begin LOCATION"){filename=getData("value", "end LOCATION")}
+	if($0 == "begin SUMMARY"){pkgdesc=getData("data", "end SUMMARY")}
+	
+}' "$temp_file" > "$temp_file2"
+
+case $arch in
+	x86_64)
+		grep -v -e "i.86\.rpm" "$temp_file2"
+		;;
+	i?86)
+		grep -v -e "x86_64\.rpm" "$temp_file2"
+		;;
+	*)
+		cat "$temp_file2"
+esac
+
+rm "$temp_file" "$temp_file2"

@@ -1,0 +1,30 @@
+# include the distribution information file
+. ./conf/distrorc
+
+# the distribution version
+VERSION="17"
+
+case $DISTRO_ARCH in
+	amd64|x86_64)
+		arch="x86_64"
+		;;
+	x86|i?86)
+		arch="i386"
+		;;
+esac
+
+# repositories - package list URL|repository name
+REPOSITORIES_BASE="http://mirror.csclub.uwaterloo.ca/fedora/linux/updates/$VERSION/$arch/|fedora-updates
+                   http://mirror.csclub.uwaterloo.ca/fedora/linux/releases/$VERSION/Fedora/$arch/os/|fedora-fedora
+                   http://mirror.csclub.uwaterloo.ca/fedora/linux/releases/$VERSION/Everything/$arch/os/|fedora-everything"
+
+REPOSITORIES=""
+for one_repository in $REPOSITORIES_BASE; do
+	REPOSITORIES+=" ${one_repository%|*}$(curl -s "${one_repository%|*}repodata/repomd.xml" | grep "primary.xml" | sed 's/.*href=\"//' | sed 's/\"\/>.*//')|${one_repository##*|}"
+done
+
+# package download mirrors - more at http://mirrors.fedoraproject.org/publiclist/
+MIRRORS="http://mirror.csclub.uwaterloo.ca/fedora
+         http://mirror.umd.edu/fedora
+         http://ftp.linux.cz/pub/linux/fedora/
+         http://fedora.aau.at/"
