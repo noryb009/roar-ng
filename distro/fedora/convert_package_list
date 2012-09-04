@@ -2,7 +2,7 @@
 
 # usage: convert_package_list $package_list $repository_name
 
-. ./distro/fedora/parameters
+. ./distro/${2%%-*}/parameters
 
 temp_file="$(mktemp -u)"
 temp_file2="$(mktemp -u)"
@@ -17,6 +17,12 @@ case $2 in
 		;;
 	fedora-everything)
 		path="linux/releases/$VERSION/Everything/$arch/os"
+		;;
+	centos-updates)
+		path="$VERSION/updates/$arch"
+		;;
+	centos-main)
+		path="$VERSION/os/$arch"
 		;;
 esac
 

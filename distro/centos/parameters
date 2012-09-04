@@ -1,0 +1,29 @@
+# include the distribution information file
+. ./conf/distrorc
+
+# the distribution version
+VERSION="6.3"
+
+case $DISTRO_ARCH in
+	amd64|x86_64)
+		arch="x86_64"
+		;;
+	x86|i?86)
+		arch="i386"
+		;;
+esac
+
+# repositories - package list URL|repository name
+REPOSITORIES_BASE="http://mirror.csclub.uwaterloo.ca/centos/$VERSION/updates/$arch/|centos-updates
+                   http://mirror.csclub.uwaterloo.ca/centos/$VERSION/os/$arch/|centos-main"
+
+REPOSITORIES=""
+for one_repository in $REPOSITORIES_BASE; do
+	REPOSITORIES+=" ${one_repository%|*}$(curl -s "${one_repository%|*}repodata/repomd.xml" | grep "primary.xml" | sed 's/.*href=\"//' | sed 's/\"\/>.*//')|${one_repository##*|}"
+done
+
+# package download mirrors - more at http://mirror-status.centos.org/
+MIRRORS="http://mirror.csclub.uwaterloo.ca/centos
+         http://ftp.jaist.ac.jp/pub/Linux/CentOS
+         http://centos.crazyfrogs.org
+         http://mirror.aarnet.edu.au/pub/centos"
