@@ -1,0 +1,28 @@
+# include the distribution information file
+. ./conf/distrorc
+
+# the distribution version
+VERSION="2"
+
+case $DISTRO_ARCH in
+	amd64|x86_64)
+		arch="x86_64"
+		;;
+	x86|i?86)
+		arch="i586"
+		;;
+esac
+
+# repositories - package list URL|repository name
+REPOSITORIES="http://ftp-stud.hs-esslingen.de/pub/Mirrors/Mageia/distrib/$VERSION/$arch/media/media_info/synthesis.hdlist_core_updates.cz|mageia-core_updates
+              http://ftp-stud.hs-esslingen.de/pub/Mirrors/Mageia/distrib/$VERSION/$arch/media/media_info/synthesis.hdlist_core_release.cz|mageia-core
+              http://ftp-stud.hs-esslingen.de/pub/Mirrors/Mageia/distrib/$VERSION/$arch/media/media_info/synthesis.hdlist_tainted_updates.cz|mageia-tainted_updates
+              http://ftp-stud.hs-esslingen.de/pub/Mirrors/Mageia/distrib/$VERSION/$arch/media/media_info/synthesis.hdlist_tainted_release.cz|mageia-tainted
+              http://ftp-stud.hs-esslingen.de/pub/Mirrors/Mageia/distrib/$VERSION/$arch/media/media_info/synthesis.hdlist_nonfree_updates.cz|mageia-nonfree_updates
+              http://ftp-stud.hs-esslingen.de/pub/Mirrors/Mageia/distrib/$VERSION/$arch/media/media_info/synthesis.hdlist_nonfree_release.cz|mageia-nonfree"
+
+# package download mirrors - more at http://mirrors.mageia.org/
+MIRRORS="http://ftp-stud.hs-esslingen.de/pub/Mirrors/Mageia
+         http://mirror.dacentec.com/mageia
+         http://mirror.aarnet.edu.au/pub/mageia
+         http://ftp.sunet.se/pub/Linux/distributions/mageia"

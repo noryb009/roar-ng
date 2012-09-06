@@ -37,7 +37,7 @@ do
 
 		# decompress the package list
 		case $package_list_url in
-			*.gz)
+			*.gz|*.cz)
 				compression="gzip"
 				;;
 			*.bz2)
