@@ -1,0 +1,29 @@
+# include the distribution information file
+. ./conf/distrorc
+
+# the distribution version
+VERSION="12.2"
+
+case $DISTRO_ARCH in
+	amd64|x86_64)
+		arch="x86_64"
+		;;
+	x86|i?86)
+		arch="i586"
+		;;
+esac
+
+# repositories - package list URL|repository name
+REPOSITORIES_BASE="http://mirror.csclub.uwaterloo.ca/opensuse/update/$VERSION/|opensuse-oss_update
+                   http://mirror.csclub.uwaterloo.ca/opensuse/distribution/$VERSION/repo/oss/suse/|opensuse-oss"
+
+REPOSITORIES=""
+for one_repository in $REPOSITORIES_BASE; do
+	REPOSITORIES+=" ${one_repository%|*}$(curl -s "${one_repository%|*}repodata/repomd.xml" | grep "primary.xml" | sed 's/.*href=\"//' | sed 's/\"\/>.*//')|${one_repository##*|}"
+done
+
+# package download mirrors - more at http://mirrors.opensuse.org/
+MIRRORS="http://mirror.csclub.uwaterloo.ca/opensuse
+         http://ftp.jaist.ac.jp/pub/Linux/openSUSE
+         http://ftp.halifax.rwth-aachen.de/opensuse
+         http://mirror.aarnet.edu.au/pub/opensuse/opensuse"

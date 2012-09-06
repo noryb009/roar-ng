@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# usage: extract_package $package $dest
+
+./distro/fedora/extract_package "$1" "$2"

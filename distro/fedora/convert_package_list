@@ -24,6 +24,12 @@ case $2 in
 	centos-main)
 		path="$VERSION/os/$arch"
 		;;
+	opensuse-oss)
+		path="distribution/$VERSION/repo/oss/suse"
+		;;
+	opensuse-oss_update)
+		path="update/$VERSION"
+		;;
 esac
 
 awk -v pkgpathStarter="$path" '
