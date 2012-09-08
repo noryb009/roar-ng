@@ -13,10 +13,7 @@ case $DISTRO_ARCH in
 		;;
 esac
 
-# repositories - package list URL|repository name; repositories are specified
-# via their base path; this directory contains repodata/repomd.xml, with
-# contains the variable name of the actual package list; see
-# download_package_list
+# repositories - package list URL|repository name
 REPOSITORIES="http://ftp-stud.hs-esslingen.de/pub/Mirrors/Mageia/distrib/$VERSION/$arch/media/media_info/synthesis.hdlist_core_updates.cz|mageia-core_updates
               http://ftp-stud.hs-esslingen.de/pub/Mirrors/Mageia/distrib/$VERSION/$arch/media/media_info/synthesis.hdlist_core_release.cz|mageia-core
               http://ftp-stud.hs-esslingen.de/pub/Mirrors/Mageia/distrib/$VERSION/$arch/media/media_info/synthesis.hdlist_tainted_updates.cz|mageia-tainted_updates
@@ -24,7 +21,7 @@ REPOSITORIES="http://ftp-stud.hs-esslingen.de/pub/Mirrors/Mageia/distrib/$VERSIO
               http://ftp-stud.hs-esslingen.de/pub/Mirrors/Mageia/distrib/$VERSION/$arch/media/media_info/synthesis.hdlist_nonfree_updates.cz|mageia-nonfree_updates
               http://ftp-stud.hs-esslingen.de/pub/Mirrors/Mageia/distrib/$VERSION/$arch/media/media_info/synthesis.hdlist_nonfree_release.cz|mageia-nonfree"
 
-# package download mirrors - more at http://mirrors.fedoraproject.org/publiclist/
+# package download mirrors - more at http://mirrors.mageia.org/
 MIRRORS="http://ftp-stud.hs-esslingen.de/pub/Mirrors/Mageia/distrib/$VERSION/$arch/media/core/updates|mageia-core_updates
          http://ftp-stud.hs-esslingen.de/pub/Mirrors/Mageia/distrib/$VERSION/$arch/media/core/release|mageia-core
          http://ftp-stud.hs-esslingen.de/pub/Mirrors/Mageia/distrib/$VERSION/$arch/media/tainted/updates|mageia-tainted_updates
