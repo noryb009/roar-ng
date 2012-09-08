@@ -5,9 +5,29 @@
 # create the output directory
 mkdir -p "$2"
 
-# convert the RPM package to a CPIO archive and extract it
+# create temporary files to hold the compressed and uncompressed CPIO archive
+temp_file="$(mktemp -u)"
+temp_file2="$(mktemp -u)"
+
+# convert the RPM package to a CPIO archive
+rpm2cpio "$1" > "$temp_file"
+
+# decompress CPIO archive, if compressed
+if gzip -t "$temp_file" &> /dev/null; then
+	zcat "$temp_file" > "$temp_file2"
+elif bzip2 -t "$temp_file" &> /dev/null; then
+	bzcat "$temp_file" > "$temp_file2"
+elif lzma -t "$temp_file" &> /dev/null; then
+	lzcat "$temp_file" > "$temp_file2"
+elif xz -t "$temp_file" &> /dev/null; then
+	xzcat "$temp_file" > "$temp_file2"
+fi
+[ -f "$temp_file2" ] && mv "$temp_file2" "$temp_file"
+
+# extract CPIO archive
 cd "$2"
-rpm2cpio "$1" | cpio -id
+cpio -id < "$temp_file"
+
 [ 0 -ne $? ] && exit 1
 
 exit 0
